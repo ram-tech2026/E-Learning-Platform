@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Learn</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #89f7fe, #66a6ff);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      .btn-custom {
+        width: 70%;
+        font-size: 1.2rem;
+        padding: 15px;
+        border-radius: 30px;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .btn-custom:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .svg-container {
+        max-width: 300px;
+        margin: 0 auto;
+        margin-bottom: 30px;
+      }
+
+      .svg-container svg {
+        width: 100%;
+        height: auto;
+        animation: float 3s infinite ease-in-out;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="d-flex align-items-center justify-content-center vh-100">
+    <div class="container">
+      <!-- SVG Logo -->
+      <div class="svg-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+          <circle
+            cx="32"
+            cy="32"
+            r="30"
+            stroke="url(#grad1)"
+            stroke-width="6"
+            fill="transparent"
+          />
+          <circle cx="32" cy="32" r="20" fill="url(#grad2)" />
+          <text
+            x="32"
+            y="38"
+            text-anchor="middle"
+            font-size="14"
+            fill="#fff"
+            font-family="Poppins"
+            font-weight="600"
+          >
+            E-Learn
+          </text>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: #74b9ff; stop-opacity: 1" />
+              <stop
+                offset="100%"
+                style="stop-color: #1e90ff; stop-opacity: 1"
+              />
+            </linearGradient>
+            <radialGradient id="grad2" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color: #48c6ef; stop-opacity: 1" />
+              <stop
+                offset="100%"
+                style="stop-color: #6f86d6; stop-opacity: 1"
+              />
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Welcome Message -->
+      <h1 class="mb-4">Welcome to E-Learn: Your Learning Companion</h1>
+
+      <!-- Buttons -->
+      <div class="d-flex flex-column align-items-center">
+        <a href="/login" class="btn btn-primary btn-custom mb-3">Login</a>
+        <a href="/register" class="btn btn-secondary btn-custom">Register</a>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
