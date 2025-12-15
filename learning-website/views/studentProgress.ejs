@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Progress | Learning Website</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Enhanced Navigation Styles */
+    header {
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: slideInDown 0.5s ease-out;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .logo i {
+      margin-right: 0.5rem;
+      font-size: 1.8rem;
+      animation: pulse 2s infinite;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 1.5rem;
+    }
+    
+    nav ul li {
+      position: relative;
+    }
+    
+    nav ul li a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    nav ul li a i {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+    
+    nav ul li a:hover {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+      color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+    
+    nav ul li a:hover i {
+      transform: scale(1.2);
+    }
+    
+    nav ul li a.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    nav ul li a.active i {
+      animation: bounce 1s infinite;
+    }
+    
+    .logout-btn {
+      background-color: rgba(var(--error-color-rgb), 0.1);
+      color: var(--error-color);
+    }
+    
+    .logout-btn:hover {
+      background-color: var(--error-color) !important;
+      color: white !important;
+    }
+    
+    /* Animation for the nav items */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    @keyframes slideInDown {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    /* Student profile enhancements */
+    .student-profile {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid var(--primary-color);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .back-link:hover {
+      transform: translateX(-5px);
+    }
+    
+    .back-link i {
+      transition: transform 0.3s ease;
+    }
+    
+    .back-link:hover i {
+      transform: translateX(-3px);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <a href="/mentor/dashboard" class="logo">
+            <i class="fas fa-graduation-cap"></i> Learning Website
+          </a>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="/mentor/dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/mentor/profile">
+                <i class="fas fa-user-circle"></i> Profile
+              </a>
+            </li>
+            <li>
+              <a href="/mentor/logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard-header fade-in">
+        <a href="/mentor/dashboard" class="back-link">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1>Student Progress</h1>
+        
+        <div class="student-profile">
+          <h2><i class="fas fa-user-graduate"></i> <%= student.name %></h2>
+          <p><i class="fas fa-envelope"></i> <%= student.email %></p>
+        </div>
+        
+        <% if (error) { %>
+          <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <% if (success) { %>
+          <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <%= success %>
+          </div>
+        <% } %>
+      </section>
+      
+      <section class="dashboard-content fade-in">
+        <div class="dashboard-card">
+          <h2><i class="fas fa-road"></i> Career Paths</h2>
+          
+          <% if (careerPaths && careerPaths.length > 0) { %>
+            <div class="career-paths-list">
+              <% careerPaths.forEach(path => { %>
+                <div class="career-path-item">
+                  <div class="career-path-header">
+                    <h3><%= path.learning_goal %></h3>
+                    <span class="status-badge status-<%= path.status %>">
+                      <%= path.status === 'completed' ? 'Completed' : 
+                         path.status === 'in_progress' ? 'In Progress' : 
+                         path.status === 'not_started' ? 'Not Started' : path.status %>
+                    </span>
+                  </div>
+                  
+                  <% if (path.status === 'completed') { %>
+                    <div class="assign-quiz-btn">
+                      <button 
+                        class="btn btn-small btn-primary" 
+                        onclick="showAssignQuizModal('career_path', '<%= path.id %>', '<%= path.learning_goal %>')"
+                      >
+                        <i class="fas fa-question-circle"></i> Assign Quiz
+                      </button>
+                    </div>
+                  <% } %>
+                  
+                  <% if (path.milestones && path.milestones.length > 0) { %>
+                    <div class="milestones-list">
+                      <h4>Milestones:</h4>
+                      <ul>
+                        <% path.milestones.forEach(milestone => { %>
+                          <li class="milestone-item status-<%= milestone.status %>">
+                            <span class="milestone-name"><%= milestone.milestone_name %></span>
+                            <span class="milestone-status">
+                              <%= milestone.status === 'completed' ? 'Completed' : 
+                                 milestone.status === 'in_progress' ? 'In Progress' : 
+                                 milestone.status === 'not_started' ? 'Not Started' : milestone.status %>
+                            </span>
+                          </li>
+                        <% }); %>
+                      </ul>
+                    </div>
+                  <% } else { %>
+                    <p class="empty-state">No milestones defined yet.</p>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <p class="empty-state">No career paths defined yet.</p>
+          <% } %>
+        </div>
+        
+        <div class="dashboard-card">
+          <h2><i class="fas fa-tasks"></i> Daily Topics</h2>
+          
+          <% if (dailyTopics && dailyTopics.length > 0) { %>
+            <div class="daily-topics-list">
+              <% dailyTopics.forEach(topic => { %>
+                <div class="daily-topic-item status-<%= topic.status %>">
+                  <div class="daily-topic-header">
+                    <h3><%= topic.title %></h3>
+                    <span class="status-badge status-<%= topic.status %>">
+                      <%= topic.status === 'completed' ? 'Completed' : 
+                         topic.status === 'in_progress' ? 'In Progress' : 
+                         topic.status === 'not_started' ? 'Not Started' : topic.status %>
+                    </span>
+                  </div>
+                  
+                  <% if (topic.status === 'completed') { %>
+                    <div class="assign-quiz-btn">
+                      <button 
+                        class="btn btn-small btn-primary" 
+                        onclick="showAssignQuizModal('daily_topic', '<%= topic.id %>', '<%= topic.title %>')"
+                      >
+                        <i class="fas fa-question-circle"></i> Assign Quiz
+                      </button>
+                    </div>
+                  <% } %>
+                  
+                  <% if (topic.description) { %>
+                    <p class="description"><%= topic.description %></p>
+                  <% } %>
+                  <p class="meta">
+                    <span><i class="fas fa-clock"></i> <%= topic.estimated_minutes %> minutes</span>
+                    <span><i class="fas fa-calendar-alt"></i> <%= new Date(topic.created_at).toLocaleDateString() %></span>
+                  </p>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <p class="empty-state">No daily topics defined yet.</p>
+          <% } %>
+        </div>
+        
+        <div class="dashboard-card">
+          <h2><i class="fas fa-comment-dots"></i> Mentor Feedback</h2>
+          
+          <form action="/mentor/students/<%= student.id %>/feedback" method="POST" class="feedback-form">
+            <div class="form-group">
+              <label for="feedback">Provide feedback to your student:</label>
+              <textarea id="feedback" name="feedback" rows="4" placeholder="Write your feedback here..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i> Send Feedback
+            </button>
+          </form>
+          
+          <p class="note">Note: This feature is coming soon. Currently, you can communicate with your student directly via email.</p>
+        </div>
+      </section>
+      
+      <!-- Quizzes Section -->
+      <section class="dashboard-content fade-in">
+        <div class="dashboard-card">
+          <h2><i class="fas fa-question-circle"></i> Assigned Quizzes</h2>
+          
+          <% 
+          // Ensure quizzes is defined with a fallback
+          const quizzesData = typeof quizzes !== 'undefined' ? quizzes : [];
+          if (quizzesData && quizzesData.length > 0) { 
+          %>
+            <div class="quizzes-list">
+              <% quizzesData.forEach(quiz => { %>
+                <div class="quiz-item">
+                  <div class="quiz-header">
+                    <h3><%= quiz.topic_name %> Quiz</h3>
+                    <span class="status-badge status-<%= quiz.status %>">
+                      <%= quiz.status === 'completed' ? 'Completed' : 'Assigned' %>
+                      
+                      <% if (quiz.status === 'completed' && quiz.score) { %>
+                        (<%= Math.round(quiz.score) %>%)
+                      <% } %>
+                    </span>
+                  </div>
+                  
+                  <p><i class="fas fa-calendar-alt"></i> Assigned: <%= new Date(quiz.created_at).toLocaleDateString() %></p>
+                  
+                  <% if (quiz.status === 'completed') { %>
+                    <p><i class="fas fa-check-circle"></i> Completed: <%= new Date(quiz.completed_at).toLocaleDateString() %></p>
+                    
+                    <% if (quiz.strengths && quiz.strengths.length > 0) { %>
+                      <div class="strengths">
+                        <h4>Strengths:</h4>
+                        <ul>
+                          <% quiz.strengths.forEach(strength => { %>
+                            <li><%= strength %></li>
+                          <% }); %>
+                        </ul>
+                      </div>
+                    <% } %>
+                    
+                    <% if (quiz.weaknesses && quiz.weaknesses.length > 0) { %>
+                      <div class="weaknesses">
+                        <h4>Areas for Improvement:</h4>
+                        <ul>
+                          <% quiz.weaknesses.forEach(weakness => { %>
+                            <li><%= weakness %></li>
+                          <% }); %>
+                        </ul>
+                      </div>
+                    <% } %>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="empty-state">
+              <i class="fas fa-question-circle"></i>
+              <p>No quizzes have been assigned yet.</p>
+              <p>Assign a quiz for completed career paths or daily topics to assess the student's understanding.</p>
+            </div>
+          <% } %>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Learning Website. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="/js/main.js"></script>
+
+  <!-- Assign Quiz Modal -->
+  <div id="assign-quiz-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2><i class="fas fa-question-circle"></i> Assign Quiz</h2>
+      
+      <p>You are about to assign a quiz for: <strong id="topic-name"></strong></p>
+      
+      <form id="assign-quiz-form" action="/mentor/students/<%= student.id %>/assign-quiz" method="POST" onsubmit="return validateAndSubmitQuizForm(this)">
+        <input type="hidden" id="topic-id" name="topicId">
+        <input type="hidden" id="topic-type" name="topicType">
+        <input type="hidden" id="topic-name-input" name="topicName">
+        <input type="hidden" name="studentId" value="<%= student.id %>">
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check"></i> Assign Quiz
+          </button>
+          <button type="button" class="btn btn-outline close-modal-btn">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    /* Quiz styles */
+    .assign-quiz-btn {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .quizzes-list {
+      margin-top: 1rem;
+    }
+    
+    .quiz-item {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      border-left: 3px solid var(--primary-color);
+    }
+    
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .strengths, .weaknesses {
+      margin-top: 0.8rem;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    
+    .strengths {
+      background-color: rgba(76, 175, 80, 0.1);
+    }
+    
+    .weaknesses {
+      background-color: rgba(244, 67, 54, 0.1);
+    }
+    
+    .strengths h4, .weaknesses h4 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    
+    .strengths ul, .weaknesses ul {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      animation: slideInDown 0.3s ease-out;
+    }
+    
+    .close-modal {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    
+    .close-modal:hover {
+      color: var(--primary-color);
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+
+  <script>
+    // Modal functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('assign-quiz-modal');
+      const closeButtons = document.querySelectorAll('.close-modal, .close-modal-btn');
+      
+      // Close modal when clicking close button
+      closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          modal.style.display = 'none';
+        });
+      });
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+    
+    // Form validation and submission function
+    function validateAndSubmitQuizForm(form) {
+      // Get form values
+      const topicId = form.elements.topicId.value;
+      const topicType = form.elements.topicType.value;
+      const topicName = form.elements.topicName.value;
+      const studentId = form.elements.studentId.value;
+      
+      // Log form data for debugging
+      console.log('Validating form with data:', {
+        topicId,
+        topicType,
+        topicName,
+        studentId,
+        action: form.action,
+        method: form.method
+      });
+      
+      // Validate form fields
+      if (!topicId || !topicType || !topicName || !studentId) {
+        alert('Missing required fields for quiz assignment');
+        console.error('Missing fields:', {
+          topicId: !topicId,
+          topicType: !topicType,
+          topicName: !topicName,
+          studentId: !studentId
+        });
+        return false;
+      }
+      
+      // Create a fetch request instead of traditional form submission
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          topicId,
+          topicType,
+          topicName,
+          studentId
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        // Check if response is a redirect
+        if (response.redirected) {
+          window.location.href = response.url;
+          return;
+        }
+        
+        return response.text();
+      })
+      .then(data => {
+        console.log('Success:', data);
+        // Close the modal
+        modal.style.display = 'none';
+        // Reload the page to show the new quiz
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to assign quiz. Please try again.');
+      });
+      
+      // Prevent traditional form submission
+      return false;
+    }
+    
+    // Show assign quiz modal
+    function showAssignQuizModal(topicType, topicId, topicName) {
+      const modal = document.getElementById('assign-quiz-modal');
+      const topicNameElement = document.getElementById('topic-name');
+      const topicIdInput = document.getElementById('topic-id');
+      const topicTypeInput = document.getElementById('topic-type');
+      const topicNameInput = document.getElementById('topic-name-input');
+      
+      // Log the input values
+      console.log('Opening modal with values:', { topicType, topicId, topicName });
+      
+      topicNameElement.textContent = topicName;
+      topicIdInput.value = topicId;
+      topicTypeInput.value = topicType;
+      topicNameInput.value = topicName;
+      
+      modal.style.display = 'block';
+    }
+  </script>
+</body>
+</html> 

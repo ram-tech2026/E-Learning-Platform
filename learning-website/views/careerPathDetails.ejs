@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Path Details - Learning Website</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .path-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .path-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .status-not-started {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .status-in-progress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-on-hold {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .milestones {
+            margin-top: 2rem;
+        }
+        
+        .milestone-card {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .milestone-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .add-milestone {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .milestone-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .nav-links {
+            margin-bottom: 2rem;
+        }
+        
+        .nav-links a {
+            margin-right: 1rem;
+            color: #4a69bd;
+            text-decoration: none;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+        
+        .path-actions {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Career Path Details</h1>
+        </header>
+        <main>
+            <% if (error) { %>
+                <div class="error-message">
+                    <%= error %>
+                </div>
+            <% } %>
+            
+            <% if (success) { %>
+                <div class="success-message">
+                    <%= success %>
+                </div>
+            <% } %>
+            
+            <div class="nav-links">
+                <a href="/home">← Back to Dashboard</a>
+                <a href="/daily-topics">Daily Topics</a>
+                <a href="/ai-recommendations">AI Recommendations</a>
+            </div>
+            
+            <div class="path-header">
+                <h2><%= careerPath.learning_goal %></h2>
+                <span class="path-status status-<%= careerPath.status.replace('_', '-') %>">
+                    <%= careerPath.status.replace('_', ' ').toUpperCase() %>
+                </span>
+            </div>
+            
+            <div class="add-milestone">
+                <h3>Add New Milestone</h3>
+                <form action="/career-paths/<%= careerPath.id %>/milestones" method="POST">
+                    <div class="form-group">
+                        <label for="milestone_name">Milestone Name</label>
+                        <input type="text" id="milestone_name" name="milestone_name" placeholder="e.g., Complete Chapter 1, Build a Project, etc." required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Milestone</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="milestones">
+                <h3>Milestones</h3>
+                
+                <% if (careerPath.milestones && careerPath.milestones.length > 0) { %>
+                    <% careerPath.milestones.forEach(milestone => { %>
+                        <div class="milestone-card">
+                            <div class="milestone-info">
+                                <h4><%= milestone.milestone_name %></h4>
+                            </div>
+                            <div class="milestone-actions">
+                                <span class="milestone-status status-<%= milestone.status.replace('_', '-') %>">
+                                    <%= milestone.status.replace('_', ' ').toUpperCase() %>
+                                </span>
+                                <form action="/career-paths/<%= careerPath.id %>/milestones/<%= milestone.id %>" method="POST" style="display: inline; margin-left: 1rem;">
+                                    <select name="status" onchange="this.form.submit()" class="btn btn-small">
+                                        <option value="not_started" <%= milestone.status === 'not_started' ? 'selected' : '' %>>Not Started</option>
+                                        <option value="in_progress" <%= milestone.status === 'in_progress' ? 'selected' : '' %>>In Progress</option>
+                                        <option value="completed" <%= milestone.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <p>No milestones yet. Add one above to track your progress!</p>
+                    </div>
+                <% } %>
+            </div>
+            
+            <div class="path-actions">
+                <div class="status-selector">
+                    <span>Path Status:</span>
+                    <form action="/career-paths/<%= careerPath.id %>/status" method="POST" style="display: inline;">
+                        <select name="status" onchange="this.form.submit()" class="btn btn-small">
+                            <option value="not_started" <%= careerPath.status === 'not_started' ? 'selected' : '' %>>Not Started</option>
+                            <option value="in_progress" <%= careerPath.status === 'in_progress' ? 'selected' : '' %>>In Progress</option>
+                            <option value="completed" <%= careerPath.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                            <option value="on_hold" <%= careerPath.status === 'on_hold' ? 'selected' : '' %>>On Hold</option>
+                        </select>
+                    </form>
+                </div>
+                
+                <form action="/career-paths/<%= careerPath.id %>/delete" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this learning path? This will also delete all milestones.')">Delete Career Path</button>
+                </form>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2025 Learning Website</p>
+        </footer>
+    </div>
+    <script src="/js/main.js"></script>
+</body>
+</html> 

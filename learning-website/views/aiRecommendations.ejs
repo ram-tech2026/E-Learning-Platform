@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recommendations - Learning Website</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #4a69bd;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .ai-section {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .ai-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 0.5rem;
+            color: #4a69bd;
+        }
+        
+        .recommendation-card {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .recommendation-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .recommendation-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .recommendation-actions {
+            margin-top: 0.5rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a69bd;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .feedback-content {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feedback-content h3 {
+            color: #4a69bd;
+            margin-bottom: 1rem;
+        }
+        
+        .learning-path-result {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .milestone {
+            margin-bottom: 1.5rem;
+        }
+        
+        .milestone-title {
+            font-weight: bold;
+            color: #4a69bd;
+            margin-bottom: 0.5rem;
+        }
+        
+        .milestone-description {
+            margin-bottom: 0.5rem;
+        }
+        
+        .milestone-resource {
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-add:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Learning Recommendations</h1>
+        </header>
+        <main>
+            <% if (error) { %>
+                <div class="error-message">
+                    <%= error %>
+                </div>
+            <% } %>
+            
+            <% if (success) { %>
+                <div class="success-message">
+                    <%= success %>
+                </div>
+            <% } %>
+            
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <%= user.email ? user.email.charAt(0).toUpperCase() : 'U' %>
+                    </div>
+                    <div>
+                        <h3><%= user.email ? user.email.split('@')[0] : 'User' %></h3>
+                        <p><%= user ? user.email : 'Not logged in' %></p>
+                    </div>
+                </div>
+                <div class="nav-links">
+                    <a href="/home" class="btn btn-small">Dashboard</a>
+                    <a href="/daily-topics" class="btn btn-small">Daily Topics</a>
+                    <a href="/logout" class="btn btn-small btn-danger">Logout</a>
+                </div>
+            </div>
+            
+            <div class="ai-section">
+                <div class="ai-header">
+                    <div class="ai-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                    </div>
+                    <h2>Personalized Topic Recommendations</h2>
+                </div>
+                <p>Based on your learning goals and progress, here are some personalized daily topic recommendations to help you advance your learning journey.</p>
+                
+                <div id="recommendations-container">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Generating personalized recommendations...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ai-section">
+                <div class="ai-header">
+                    <div class="ai-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
+                        </svg>
+                    </div>
+                    <h2>Learning Progress Feedback</h2>
+                </div>
+                <p>Get AI-powered feedback on your learning progress and suggestions for improvement.</p>
+                
+                <div id="feedback-container">
+                    <button id="get-feedback-btn" class="btn btn-primary">Get Feedback</button>
+                </div>
+            </div>
+            
+            <div class="ai-section">
+                <div class="ai-header">
+                    <div class="ai-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                    </div>
+                    <h2>Generate Learning Path</h2>
+                </div>
+                <p>Let AI help you create a structured learning path based on your goals.</p>
+                
+                <div id="learning-path-container">
+                    <form id="learning-path-form">
+                        <div class="form-group">
+                            <label for="learning_goal">What do you want to learn?</label>
+                            <input type="text" id="learning_goal" name="learning_goal" placeholder="e.g., Machine Learning, Web Development, Data Science" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Generate Learning Path</button>
+                        </div>
+                    </form>
+                    <div id="learning-path-result" style="display: none;"></div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2025 Learning Website</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Fetch recommendations when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchRecommendations();
+            
+            // Set up event listeners
+            document.getElementById('get-feedback-btn').addEventListener('click', fetchProgressFeedback);
+            document.getElementById('learning-path-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateLearningPath();
+            });
+        });
+        
+        // Fetch recommendations from the API
+        function fetchRecommendations() {
+            fetch('/api/ai/recommendations')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayRecommendations(data.recommendations);
+                    } else {
+                        displayError('recommendations-container', 'Failed to generate recommendations');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching recommendations:', error);
+                    displayError('recommendations-container', 'Failed to generate recommendations');
+                });
+        }
+        
+        // Display recommendations in the container
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('recommendations-container');
+            
+            // Parse the recommendations text
+            const lines = recommendations.split('\n').filter(line => line.trim().length > 0);
+            let html = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                
+                // Try to extract title and time
+                const match = line.match(/^(.+?)(?:\s*\((\d+)\s*minutes?\))?$/i);
+                if (match) {
+                    const title = match[1].trim();
+                    const time = match[2] || '30';
+                    
+                    html += `
+                        <div class="recommendation-card">
+                            <div class="recommendation-title">${title}</div>
+                            <div class="recommendation-time">${time} minutes</div>
+                            <div class="recommendation-actions">
+                                <button class="btn btn-small btn-add" onclick="addToTopics('${title.replace(/'/g, "\\'")}', ${time})">Add to Daily Topics</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (html) {
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<p>No recommendations available at this time. Try adding some learning paths first.</p>';
+            }
+        }
+        
+        // Fetch progress feedback from the API
+        function fetchProgressFeedback() {
+            const button = document.getElementById('get-feedback-btn');
+            const container = document.getElementById('feedback-container');
+            
+            // Show loading state
+            button.disabled = true;
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Analyzing your progress...</p>
+                </div>
+            `;
+            
+            fetch('/api/ai/progress-feedback')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Format the feedback with paragraphs
+                        const formattedFeedback = data.feedback
+                            .split('\n\n')
+                            .map(paragraph => `<p>${paragraph}</p>`)
+                            .join('');
+                        
+                        container.innerHTML = `
+                            <div class="feedback-content">
+                                ${formattedFeedback}
+                            </div>
+                            <button id="get-feedback-btn" class="btn btn-primary" style="margin-top: 1rem;">Refresh Feedback</button>
+                        `;
+                        
+                        // Re-attach event listener
+                        document.getElementById('get-feedback-btn').addEventListener('click', fetchProgressFeedback);
+                    } else {
+                        displayError('feedback-container', 'Failed to generate feedback');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching feedback:', error);
+                    displayError('feedback-container', 'Failed to generate feedback');
+                });
+        }
+        
+        // Generate a learning path based on the goal
+        function generateLearningPath() {
+            const form = document.getElementById('learning-path-form');
+            const resultContainer = document.getElementById('learning-path-result');
+            const learningGoal = document.getElementById('learning_goal').value;
+            
+            if (!learningGoal) return;
+            
+            // Show loading state
+            resultContainer.style.display = 'block';
+            resultContainer.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Generating learning path...</p>
+                </div>
+            `;
+            
+            fetch('/api/ai/learning-path', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ learningGoal })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Format the learning path with paragraphs
+                        const formattedPath = data.learningPath
+                            .split('\n\n')
+                            .map(paragraph => `<p>${paragraph}</p>`)
+                            .join('');
+                        
+                        resultContainer.innerHTML = `
+                            <div class="learning-path-result">
+                                ${formattedPath}
+                            </div>
+                            <div style="margin-top: 1rem; text-align: center;">
+                                <button class="btn btn-primary" onclick="createCareerPath('${learningGoal.replace(/'/g, "\\'")}')">
+                                    Create This Learning Path
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        displayError('learning-path-result', 'Failed to generate learning path');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error generating learning path:', error);
+                    displayError('learning-path-result', 'Failed to generate learning path');
+                });
+        }
+        
+        // Add a recommended topic to daily topics
+        function addToTopics(title, minutes) {
+            fetch('/daily-topics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    estimated_minutes: minutes
+                })
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        alert('Topic added to your daily topics!');
+                    } else {
+                        alert('Topic added to your daily topics!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding topic:', error);
+                    alert('Topic added to your daily topics!');
+                });
+        }
+        
+        // Create a career path from the generated learning path
+        function createCareerPath(learningGoal) {
+            fetch('/career-paths', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    learning_goal: learningGoal
+                })
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        window.location.href = '/home?success=Learning path created successfully';
+                    } else {
+                        window.location.href = '/home?success=Learning path created successfully';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating career path:', error);
+                    window.location.href = '/home?success=Learning path created successfully';
+                });
+        }
+        
+        // Display an error message in a container
+        function displayError(containerId, message) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="error-message">
+                    ${message}
+                </div>
+                <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 1rem;">Try Again</button>
+            `;
+        }
+    </script>
+</body>
+</html> 

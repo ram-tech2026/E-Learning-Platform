@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assigned Quizzes | Mentor Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Enhanced Navigation Styles */
+    header {
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: slideInDown 0.5s ease-out;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .logo i {
+      margin-right: 0.5rem;
+      font-size: 1.8rem;
+      animation: pulse 2s infinite;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+    
+    nav ul li a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    nav ul li a:hover {
+      background-color: var(--light-gray);
+      transform: translateY(-3px);
+    }
+    
+    nav ul li a i {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+    }
+    
+    .active-nav {
+      background-color: var(--light-gray);
+      color: var(--primary-color) !important;
+      font-weight: bold;
+    }
+    
+    .logout-btn {
+      color: var(--error-color);
+    }
+    
+    .logout-btn:hover {
+      background-color: var(--error-color) !important;
+      color: white !important;
+    }
+    
+    /* Animation for the nav items */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    @keyframes slideInDown {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    /* Quiz list styles */
+    .quizzes-container {
+      margin-top: 2rem;
+    }
+    
+    .quiz-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid var(--primary-color);
+      animation: fadeIn 0.8s ease-in-out;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .quiz-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--light-gray);
+      padding-bottom: 0.8rem;
+    }
+    
+    .quiz-title {
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .quiz-status {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    .status-assigned {
+      background-color: rgba(33, 150, 243, 0.1);
+      color: #1976D2;
+    }
+    
+    .status-completed {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: #388E3C;
+    }
+    
+    .quiz-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .quiz-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .quiz-detail-item i {
+      color: var(--primary-color);
+      width: 20px;
+      text-align: center;
+    }
+    
+    .quiz-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      background-color: var(--light-gray);
+      border-radius: var(--border-radius-lg);
+      margin-top: 1.5rem;
+      border: 2px dashed var(--medium-gray);
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--dark-gray);
+      margin-bottom: 1.5rem;
+      animation: pulse 2s infinite;
+    }
+    
+    .empty-state p {
+      margin-bottom: 1.5rem;
+      color: var(--text-light);
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .back-link:hover {
+      transform: translateX(-5px);
+    }
+    
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-weight: bold;
+      color: white;
+      margin-left: 1rem;
+    }
+    
+    .score-excellent {
+      background-color: #4CAF50;
+    }
+    
+    .score-good {
+      background-color: #2196F3;
+    }
+    
+    .score-average {
+      background-color: #FF9800;
+    }
+    
+    .score-poor {
+      background-color: #F44336;
+    }
+    
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <a href="/mentor/dashboard" class="logo">
+          <i class="fas fa-user-tie"></i> Mentor Dashboard
+        </a>
+        
+        <nav>
+          <ul>
+            <li>
+              <a href="/mentor/dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="/mentor/profile">
+                <i class="fas fa-user-circle"></i> Profile
+              </a>
+            </li>
+            <li>
+              <a href="/mentor/quizzes" class="active-nav">
+                <i class="fas fa-question-circle"></i> Quizzes
+              </a>
+            </li>
+            <li>
+              <a href="/mentor/logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard-header fade-in">
+        <a href="/mentor/dashboard" class="back-link">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h1><i class="fas fa-question-circle"></i> Assigned Quizzes</h1>
+        
+        <% if (error) { %>
+          <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <% if (success) { %>
+          <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <%= success %>
+          </div>
+        <% } %>
+      </section>
+      
+      <section class="quizzes-container">
+        <% if (quizzes && quizzes.length > 0) { %>
+          <% quizzes.forEach((quiz, index) => { %>
+            <div class="quiz-card stagger-<%= (index % 3) + 1 %>">
+              <div class="quiz-header">
+                <h3 class="quiz-title">
+                  <i class="fas fa-question-circle"></i> 
+                  <%= quiz.topic_name %> Quiz
+                  
+                  <% if (quiz.status === 'completed' && quiz.score) { %>
+                    <span class="score-badge <%= quiz.score >= 90 ? 'score-excellent' : quiz.score >= 70 ? 'score-good' : quiz.score >= 50 ? 'score-average' : 'score-poor' %>">
+                      <%= Math.round(quiz.score) %>%
+                    </span>
+                  <% } %>
+                </h3>
+                
+                <span class="quiz-status status-<%= quiz.status %>">
+                  <% if (quiz.status === 'assigned') { %>
+                    <i class="fas fa-clock"></i>
+                  <% } else if (quiz.status === 'completed') { %>
+                    <i class="fas fa-check-circle"></i>
+                  <% } %>
+                  <%= quiz.status.toUpperCase() %>
+                </span>
+              </div>
+              
+              <div class="quiz-details">
+                <div class="quiz-detail-item">
+                  <i class="fas fa-user-graduate"></i>
+                  <span>Student: <%= quiz.studentName %></span>
+                </div>
+                
+                <div class="quiz-detail-item">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>Assigned: <%= new Date(quiz.created_at).toLocaleDateString() %></span>
+                </div>
+                
+                <div class="quiz-detail-item">
+                  <i class="fas fa-tag"></i>
+                  <span>Type: <%= quiz.topic_type === 'career_path' ? 'Career Path' : 'Daily Topic' %></span>
+                </div>
+                
+                <% if (quiz.status === 'completed' && quiz.completed_at) { %>
+                  <div class="quiz-detail-item">
+                    <i class="fas fa-check"></i>
+                    <span>Completed: <%= new Date(quiz.completed_at).toLocaleDateString() %></span>
+                  </div>
+                <% } %>
+              </div>
+              
+              <div class="quiz-actions">
+                <a href="/mentor/students/<%= quiz.student_id %>" class="btn btn-small btn-outline">
+                  <i class="fas fa-user"></i> View Student
+                </a>
+                
+                <% if (quiz.status === 'completed') { %>
+                  <a href="/mentor/quizzes/<%= quiz.id %>/results" class="btn btn-small btn-primary">
+                    <i class="fas fa-chart-bar"></i> View Results
+                  </a>
+                <% } %>
+                
+                <form action="/mentor/quizzes/<%= quiz.id %>/delete" method="POST" style="display: inline;">
+                  <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this quiz?')">
+                    <i class="fas fa-trash-alt"></i> Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-question-circle"></i>
+            <p>You haven't assigned any quizzes yet.</p>
+            <p>Assign quizzes to your students to track their progress!</p>
+            <a href="/mentor/dashboard" class="btn btn-primary">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+          </div>
+        <% } %>
+      </section>
+    </main>
+    
+    <footer>
+      <p>&copy; 2025 Learning Website | <i class="fas fa-code"></i> with <i class="fas fa-heart" style="color: #333;"></i></p>
+    </footer>
+  </div>
+</body>
+</html> 

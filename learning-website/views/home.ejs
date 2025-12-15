@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn aLot - Your Professional Learning Platform</title>
+
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--background-alt);
+        }
+        
+        header {
+            background: linear-gradient(25deg, #000000, #000000);
+
+            padding: 1rem 0;
+            box-shadow: var(--shadow-md);
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+        
+        .logo-text {
+            font-family: var(--font-secondary);
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span {
+            color: var(--accent-color);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, rgba(var(--primary-color-rgb), 0.05), rgba(var(--primary-color-rgb), 0.1));
+            padding: 1.8rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary-color);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-right: 1.5rem;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s infinite;
+        }
+        
+        .welcome-text h2 {
+            font-family: var(--font-secondary);
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-text p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .dashboard-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            min-width: 120px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .career-paths {
+            margin-top: 2.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-family: var(--font-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        .career-path-card {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--primary-color);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .career-path-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .career-path-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .career-path-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-in-progress {
+            background-color: rgba(21, 101, 192, 0.1);
+            color: var(--info-color);
+        }
+        
+        .status-completed {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-abandoned {
+            background-color: rgba(198, 40, 40, 0.1);
+            color: var(--error-color);
+        }
+        
+        .status-on-hold {
+            background-color: rgba(249, 168, 37, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .add-career-path {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--primary-color);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .career-path-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-small i {
+            font-size: 0.9rem;
+        }
+        
+        .btn-danger {
+            background-color: var(--error-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #b71c1c;
+            transform: translateY(-2px);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius-lg);
+            margin-top: 1.5rem;
+            border: 2px dashed var(--medium-gray);
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .empty-state p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        /* Daily Topics Styles */
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .daily-topics {
+            margin-top: 2rem;
+        }
+        
+        .topic-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .topic-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .topic-checkbox {
+            margin-right: 1rem;
+        }
+        
+        .topic-info {
+            flex-grow: 1;
+        }
+        
+        .topic-title {
+            font-weight: bold;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .topic-title i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .topic-time {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .topic-time i {
+            margin-right: 0.3rem;
+        }
+        
+        .topic-status {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .status-pending {
+            background-color: var(--light-gray);
+            color: var(--text-light);
+        }
+        
+        .section-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--primary-color);
+        }
+        
+        .section-header h3 i {
+            color: var(--primary-color);
+        }
+        
+        .view-all {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        
+        .view-all:hover {
+            transform: translateX(3px);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #000000;
+            border-radius: var(--border-radius-md);
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        /* Animation classes */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        
+        /* Username edit styles */
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.5rem;
+            margin-left: 0.5rem;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+        
+        .btn-icon:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .inline-form-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .inline-form-group input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        #username-display {
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        /* Quiz styles */
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="logo-text">Learn <span>aLot</span></div>
+            </div>
+            <nav>
+                <a href="/home" class="active">Dashboard</a>
+                <a href="/mentors">Mentors</a>
+                <a href="/quizzes">Quizzes</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout" class="btn-outline">Logout</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container mt-4">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Accelerate Your Learning Journey</h1>
+                <p>Personalized learning paths, expert mentorship, and interactive quizzes to help you master new skills.</p>
+                <div class="hero-cta">
+                    <a href="/mentors" class="btn btn-primary">Find a Mentor</a>
+                    <a href="/career-paths" class="btn btn-outline">Explore Paths</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+        </section>
+
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="welcome-text">
+                    <h2>Welcome, <%= user.name %>!</h2>
+                    <p>Track your learning progress and explore new opportunities</p>
+                </div>
+            </div>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-value"><%= quizzes.length %></div>
+                    <div class="stat-label">Quizzes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value"><%= quizzes.filter(q => q.status === 'completed').length %></div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value"><%= quizzes.filter(q => q.status === 'pending').length %></div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="career-paths">
+            <div class="section-header">
+                <h2 class="section-title">Your Learning Journey</h2>
+                <a href="/career-paths" class="btn btn-primary">Explore More Paths</a>
+            </div>
+            
+            <!-- Career paths will be listed here -->
+            <% if (quizzes && quizzes.length > 0) { %>
+                <% quizzes.forEach(quiz => { %>
+                    <div class="career-path-card">
+                        <div class="career-path-header">
+                            <h3><%= quiz.topic_name %></h3>
+                            <div class="career-path-status status-<%= quiz.status === 'completed' ? 'completed' : quiz.status === 'in_progress' ? 'in-progress' : 'pending' %>">
+                                <i class="fas fa-<%= quiz.status === 'completed' ? 'check-circle' : quiz.status === 'in_progress' ? 'spinner' : 'clock' %>"></i>
+                                <%= quiz.status === 'completed' ? 'Completed' : quiz.status === 'in_progress' ? 'In Progress' : 'Pending' %>
+                            </div>
+                        </div>
+                        <p><%= quiz.topic_type === 'career_path' ? 'Career Path' : 'Topic' %>: <%= quiz.topic_name %></p>
+                        <div class="progress-container mt-3">
+                            <% if (quiz.status === 'completed') { %>
+                                <div class="progress-bar" style="width: 100%"></div>
+                            <% } else if (quiz.status === 'in_progress') { %>
+                                <div class="progress-bar" style="width: 50%"></div>
+                            <% } else { %>
+                                <div class="progress-bar" style="width: 0%"></div>
+                            <% } %>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <span class="text-light"><%= quiz.status === 'completed' ? 'Completed on ' + new Date(quiz.completed_at).toLocaleDateString() : quiz.status === 'in_progress' ? 'Started on ' + new Date(quiz.created_at).toLocaleDateString() : 'Assigned on ' + new Date(quiz.created_at).toLocaleDateString() %></span>
+                            <a href="/quiz/<%= quiz.id %>" class="btn btn-primary btn-small">
+                                <%= quiz.status === 'completed' ? 'View Results' : 'Take Quiz' %>
+                            </a>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-book-open"></i>
+                    <h3>No quizzes assigned yet</h3>
+                    <p>Your mentor will assign quizzes to you soon.</p>
+                </div>
+            <% } %>
+        </div>
+        
+        <div class="dashboard-sections">
+            <div class="career-paths-section">
+                <div class="add-career-path">
+                    <h3><i class="fas fa-plus-circle"></i> Add New Learning Goal</h3>
+                    <form action="/career-paths" method="POST">
+                        <div class="form-group">
+                            <label for="learning_goal"><i class="fas fa-bullseye"></i> What do you want to learn?</label>
+                            <input type="text" id="learning_goal" name="learning_goal" placeholder="e.g., Learn JavaScript, Master Data Science, etc." required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-rocket"></i> Create Learning Path</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="career-paths">
+                    <div class="section-header">
+                        <h3><i class="fas fa-road"></i> My Learning Paths</h3>
+                    </div>
+                    
+                    <% if (careerPaths && careerPaths.length > 0) { %>
+                        <% careerPaths.forEach((path, index) => { %>
+                            <div class="career-path-card stagger-<%= (index % 3) + 1 %>">
+                                <div class="career-path-header">
+                                    <h3><i class="fas fa-book"></i> <%= path.learning_goal %></h3>
+                                    <span class="career-path-status status-<%= path.status.replace('_', '-') %>">
+                                        <% if (path.status === 'in_progress') { %>
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        <% } else if (path.status === 'completed') { %>
+                                            <i class="fas fa-check-circle"></i>
+                                        <% } else if (path.status === 'on_hold') { %>
+                                            <i class="fas fa-pause-circle"></i>
+                                        <% } else { %>
+                                            <i class="fas fa-circle"></i>
+                                        <% } %>
+                                        <%= path.status.replace('_', ' ').toUpperCase() %>
+                                    </span>
+                                </div>
+                                <div class="career-path-actions">
+                                    <a href="/career-paths/<%= path.id %>" class="btn btn-small btn-primary">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <form action="/career-paths/<%= path.id %>/delete" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this learning path?')">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <i class="fas fa-road"></i>
+                            <p>You don't have any learning paths yet.</p>
+                            <p>Create one above to start tracking your learning journey!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            
+            <div class="daily-topics-section">
+                <div class="daily-topics">
+                    <div class="section-header">
+                        <h3><i class="fas fa-calendar-day"></i> Daily Topics</h3>
+                        <a href="/daily-topics" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <% if (dailyTopics && dailyTopics.length > 0) { %>
+                        <% dailyTopics.slice(0, 5).forEach((topic, index) => { %>
+                            <div class="topic-card stagger-<%= (index % 3) + 1 %>">
+                                <div class="topic-checkbox">
+                                    <input type="checkbox" <%= topic.status === 'completed' ? 'checked' : '' %> disabled>
+                                </div>
+                                <div class="topic-info">
+                                    <div class="topic-title">
+                                        <i class="fas fa-book-open"></i> <%= topic.title %>
+                                    </div>
+                                    <div class="topic-time">
+                                        <i class="fas fa-clock"></i> <%= topic.estimated_minutes %> minutes
+                                    </div>
+                                </div>
+                                <span class="topic-status status-<%= topic.status %>">
+                                    <% if (topic.status === 'in_progress') { %>
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    <% } else if (topic.status === 'completed') { %>
+                                        <i class="fas fa-check-circle"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-hourglass-start"></i>
+                                    <% } %>
+                                    <%= topic.status.replace('_', ' ').toUpperCase() %>
+                                </span>
+                            </div>
+                        <% }); %>
+                        
+                        <% if (dailyTopics.length > 5) { %>
+                            <div style="text-align: center; margin-top: 1rem;">
+                                <a href="/daily-topics" class="btn btn-small">
+                                    <i class="fas fa-plus"></i> View <%= dailyTopics.length - 5 %> More Topics
+                                </a>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <i class="fas fa-tasks"></i>
+                            <p>You don't have any daily topics yet.</p>
+                            <p>Add some in the Daily Topics section to track your daily learning activities!</p>
+                            <a href="/daily-topics" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Daily Topics
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <!-- Quizzes Section -->
+                <div class="daily-topics" style="margin-top: 2rem;">
+                    <div class="section-header">
+                        <h3><i class="fas fa-question-circle"></i> My Quizzes</h3>
+                    </div>
+                    
+                    <% 
+                    // Ensure quizzes is defined with a fallback
+                    const quizzesData = typeof quizzes !== 'undefined' ? quizzes : [];
+                    if (quizzesData && quizzesData.length > 0) { 
+                    %>
+                        <% quizzesData.slice(0, 3).forEach((quiz, index) => { %>
+                            <div class="topic-card stagger-<%= (index % 3) + 1 %>">
+                                <div class="topic-info" style="flex-grow: 1;">
+                                    <div class="topic-title">
+                                        <i class="fas fa-question-circle"></i> <%= quiz.topic_name %> Quiz
+                                    </div>
+                                    <div class="topic-time">
+                                        <i class="fas fa-calendar-alt"></i> Assigned: <%= new Date(quiz.created_at).toLocaleDateString() %>
+                                    </div>
+                                    <div style="margin-top: 0.5rem;">
+                                        <% if (quiz.status === 'assigned') { %>
+                                            <a href="/quiz/<%= quiz.id %>" class="btn btn-small btn-primary">
+                                                <i class="fas fa-play-circle"></i> Take Quiz
+                                            </a>
+                                        <% } else if (quiz.status === 'completed') { %>
+                                            <a href="/quiz/<%= quiz.id %>/results" class="btn btn-small btn-outline">
+                                                <i class="fas fa-chart-bar"></i> View Results
+                                            </a>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <span class="topic-status <%= quiz.status === 'completed' ? 'status-completed' : 'status-pending' %>">
+                                    <% if (quiz.status === 'assigned') { %>
+                                        <i class="fas fa-hourglass-start"></i>
+                                        PENDING
+                                    <% } else if (quiz.status === 'completed') { %>
+                                        <i class="fas fa-check-circle"></i>
+                                        COMPLETED
+                                        <% if (quiz.score) { %>
+                                            (<%= Math.round(quiz.score) %>%)
+                                        <% } %>
+                                    <% } %>
+                                </span>
+                            </div>
+                        <% }); %>
+                        
+                        <% if (quizzesData.length > 3) { %>
+                            <div style="text-align: center; margin-top: 1rem;">
+                                <a href="/quizzes" class="btn btn-small">
+                                    <i class="fas fa-plus"></i> View <%= quizzesData.length - 3 %> More Quizzes
+                                </a>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <i class="fas fa-question-circle"></i>
+                            <p>You don't have any quizzes yet.</p>
+                            <p>Your mentor will assign quizzes to test your knowledge!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Learn aLot</h3>
+                    <p>Your professional learning platform for career growth and skill development.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/home">Dashboard</a></li>
+                        <li><a href="/mentors">Find Mentors</a></li>
+                        <li><a href="/quizzes">My Quizzes</a></li>
+                        <li><a href="/career-paths">Career Paths</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <%= new Date().getFullYear() %> Learn aLot | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/js/main.js"></script>
+    <script>
+        // Username edit functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const editBtn = document.getElementById('edit-username-btn');
+            const cancelBtn = document.getElementById('cancel-edit-btn');
+            const usernameDisplay = document.getElementById('username-display');
+            const usernameForm = document.getElementById('update-username-form');
+            const usernameInput = document.getElementById('username');
+            
+            // Show edit form
+            editBtn.addEventListener('click', function() {
+                usernameDisplay.parentElement.style.display = 'none';
+                usernameForm.style.display = 'block';
+                usernameInput.focus();
+                usernameInput.select();
+            });
+            
+            // Cancel edit
+            cancelBtn.addEventListener('click', function() {
+                usernameForm.style.display = 'none';
+                usernameDisplay.parentElement.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html> 

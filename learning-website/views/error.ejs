@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Error' %> - Learning Website</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 3rem 0;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .error-icon {
+            font-size: 5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .error-code {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+        
+        .error-details {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: left;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .back-link {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .troubleshooting {
+            margin-top: 2rem;
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .troubleshooting h3 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .troubleshooting ul {
+            text-align: left;
+            padding-left: 2rem;
+        }
+        
+        .troubleshooting li {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+        
+        header {
+            animation: slideInFromTop 0.8s ease-out;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius-md);
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="slide-from-top">
+            <h1><i class="fas fa-graduation-cap"></i> Learning Website</h1>
+        </header>
+        <main>
+            <div class="error-container">
+                <div class="error-icon">
+                    <% if (error && error.status === 404) { %>
+                        <i class="fas fa-map-signs"></i>
+                    <% } else if (error && error.status === 403) { %>
+                        <i class="fas fa-lock"></i>
+                    <% } else if (error && error.status === 503) { %>
+                        <i class="fas fa-database"></i>
+                    <% } else { %>
+                        <i class="fas fa-exclamation-triangle"></i>
+                    <% } %>
+                </div>
+                
+                <div class="error-code">
+                    <%= error && error.status ? error.status : 500 %>
+                </div>
+                
+                <div class="error-message">
+                    <%= title || 'Server Error' %>
+                </div>
+                
+                <p>
+                    <%= error && error.message ? error.message : 'Something went wrong on our end. Please try again later.' %>
+                </p>
+                
+                <% if (error && error.status === 503) { %>
+                    <div class="troubleshooting">
+                        <h3><i class="fas fa-tools"></i> Troubleshooting Tips</h3>
+                        <ul>
+                            <li>Wait a few moments and try again</li>
+                            <li>Check your internet connection</li>
+                            <li>Try refreshing the page</li>
+                            <li>Clear your browser cache and cookies</li>
+                        </ul>
+                    </div>
+                <% } %>
+                
+                <div class="back-link">
+                    <a href="/" class="btn btn-primary"><i class="fas fa-home"></i> Back to Home</a>
+                    <% if (user) { %>
+                        <a href="/home" class="btn btn-primary"><i class="fas fa-tachometer-alt"></i> Go to Dashboard</a>
+                    <% } %>
+                    <button onclick="window.location.reload()" class="btn btn-primary"><i class="fas fa-sync-alt"></i> Refresh Page</button>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2025 Learning Website | <i class="fas fa-code"></i> with <i class="fas fa-heart" style="color: #333;"></i></p>
+        </footer>
+    </div>
+</body>
+</html> 
