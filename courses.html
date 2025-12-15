@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses Page</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+
+      .course-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .course-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar {
+        background-color: #007bff;
+      }
+
+      .navbar-brand,
+      .nav-link {
+        color: white !important;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .btn-success {
+        background-color: #28a745;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+      }
+
+      .section {
+        display: none;
+      }
+
+      .active-section {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">Courses</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              onclick="showSection('available-courses')"
+              >Available Courses</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              onclick="showSection('enrolled-courses-section')"
+              >Enrolled Courses</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              onclick="showSection('playlist-courses-section')"
+              >My Playlist</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Available Courses Section -->
+    <div id="available-courses" class="section active-section container">
+      <h2 class="text-center mb-4">Available Courses</h2>
+      <div class="grid-container" id="courses-container">
+        <!-- Courses will be dynamically generated here -->
+      </div>
+    </div>
+
+    <!-- Enrolled Courses Section -->
+    <div id="enrolled-courses-section" class="section container">
+      <h2 class="text-center mb-4">Enrolled Courses</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Course Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="enrolled-courses">
+          <!-- Enrolled courses will appear here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Playlist Section -->
+    <div id="playlist-courses-section" class="section container">
+      <h2 class="text-center mb-4">My Playlist</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Course Name</th>
+          </tr>
+        </thead>
+        <tbody id="playlist-courses">
+          <!-- Playlist courses will appear here -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      const courses = [
+        { name: "Web Development", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248606/1_scckr7.jpg" },
+        { name: "Machine Learning", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248607/2_cgexwe.jpg" },
+        { name: "Data Science", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248609/8_t4q7cc.jpg" },
+        { name: "UI/UX Design", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248610/9_icz8fw.jpg" },
+        { name: "Cyber Security", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248608/3_hvlu5j.jpg" },
+        { name: "Blockchain", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248608/4_gpxin9.jpg" },
+        { name: "Cloud Computing", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248609/6_rg7lmi.jpg" },
+        {
+          name: "Mobile App Development",
+          image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248608/5_tbimec.jpg",
+        },
+        {
+          name: "Artificial Intelligence",
+          image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248498/0_gssoag.png",
+        },
+        { name: "Game Development", image: "https://res.cloudinary.com/dyg1igl3b/image/upload/v1741248966/game_rurneg.webp" },
+      ];
+
+      const enrolledCourses = [];
+      const playlistCourses = [];
+
+      function renderCourses() {
+        const coursesContainer = document.getElementById("courses-container");
+        coursesContainer.innerHTML = courses
+          .map(
+            (course, index) => `
+        <div class="course-card card">
+          <img class="card-img-top" src="${course.image}" alt="${course.name}">
+          <div class="card-body">
+            <h5 class="card-title">${course.name}</h5>
+            <button class="btn btn-success mr-2" onclick="enrollCourse(${index})">Enroll</button>
+            <button class="btn btn-primary" onclick="addToPlaylist(${index})">Add to Playlist</button>
+          </div>
+        </div>`
+          )
+          .join("");
+      }
+
+      function enrollCourse(index) {
+        const course = courses[index];
+        if (!enrolledCourses.includes(course.name)) {
+          enrolledCourses.push(course.name);
+          renderEnrolledCourses();
+        } else {
+          alert("Already enrolled in this course!");
+        }
+      }
+
+      function addToPlaylist(index) {
+        const course = courses[index];
+        if (!playlistCourses.includes(course.name)) {
+          playlistCourses.push(course.name);
+          renderPlaylistCourses();
+        } else {
+          alert("Course already in the playlist!");
+        }
+      }
+
+      function renderEnrolledCourses() {
+        const enrolledTable = document.getElementById("enrolled-courses");
+        enrolledTable.innerHTML = enrolledCourses
+          .map(
+            (course) => `
+          <tr>
+            <td>${course}</td>
+            <td><button class="btn btn-info" onclick="watchCourse()">Watch</button></td>
+          </tr>`
+          )
+          .join("");
+      }
+
+      function renderPlaylistCourses() {
+        const playlistTable = document.getElementById("playlist-courses");
+        playlistTable.innerHTML = playlistCourses
+          .map((course) => `<tr><td>${course}</td></tr>`)
+          .join("");
+      }
+
+      function showSection(sectionId) {
+        document.querySelectorAll(".section").forEach((section) => {
+          section.classList.remove("active-section");
+        });
+        document.getElementById(sectionId).classList.add("active-section");
+      }
+
+      function watchCourse() {
+        window.open("about:blank", "_blank");
+      }
+
+      renderCourses();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

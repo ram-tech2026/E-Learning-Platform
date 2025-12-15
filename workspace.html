@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User's Workspace</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .container {
+        padding-top: 80px;
+      }
+
+      .icon-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 50px;
+        gap: 20px;
+      }
+
+      .icon {
+        cursor: pointer;
+        text-align: center;
+        width: 150px;
+        transition: transform 0.3s ease;
+      }
+
+      .icon svg {
+        width: 70px;
+        height: 70px;
+        fill: #ff6b6b;
+        transition: transform 0.5s;
+      }
+
+      .icon:hover svg {
+        transform: rotate(360deg);
+      }
+
+      .icon p {
+        margin-top: 10px;
+        font-weight: 600;
+        font-size: 18px;
+      }
+
+      .icon:hover {
+        transform: scale(1.1);
+      }
+
+      .popup {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 400px; /* Increased width for quiz */
+        z-index: 1000;
+        text-align: center;
+        transition: opacity 0.4s;
+        max-height: 80%; /* Added max-height */
+        overflow-y: auto; /* Added overflow for long content */
+      }
+
+      .popup.active {
+        display: block;
+        opacity: 1;
+      }
+
+      .btn {
+        margin-top: 10px;
+      }
+
+      #imagePreview {
+        max-width: 100%;
+        height: auto;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container text-center">
+      <h1 class="display-4">Accessibility Features</h1>
+      <div class="icon-container">
+        <div class="icon" id="supportIcon">
+          <i class="fas fa-headset fa-3x"></i>
+          <p>Customer Support</p>
+        </div>
+        <div class="icon" id="quizIcon">
+          <i class="fas fa-question-circle fa-3x"></i>
+          <p>Interactive Quiz</p>
+        </div>
+        <div class="icon" id="speechToTextIcon">
+          <i class="fas fa-microphone-alt fa-3x"></i>
+          <p>Speech to Text</p>
+        </div>
+        <div class="icon" id="textToSpeechIcon">
+          <i class="fas fa-volume-up fa-3x"></i>
+          <p>Text to Speech</p>
+        </div>
+        <div class="icon" id="imagePredictionIcon">
+          <i class="fas fa-image fa-3x"></i>
+          <p>Image Prediction</p>
+        </div>
+      </div>
+
+      <!-- Pop-ups -->
+      <div class="popup" id="supportPopup">
+        <h4>Customer Support</h4>
+        <p>
+          If you need help, please email us at:
+          <a href="mailto:support@example.com">support@example.com</a>
+        </p>
+        <button class="btn btn-secondary" onclick="closePopup('supportPopup')">
+          Close
+        </button>
+      </div>
+
+      <div class="popup" id="quizPopup">
+        <h4>Interactive Quiz</h4>
+        <form id="quizForm">
+          <div id="quizQuestions"></div>
+          <button type="submit" class="btn btn-primary">Submit Answers</button>
+        </form>
+        <div id="quizResult" style="margin-top: 20px"></div>
+        <button class="btn btn-secondary" onclick="closePopup('quizPopup')">
+          Close
+        </button>
+      </div>
+
+      <div class="popup" id="speechToTextPopup">
+        <h4>Speech to Text</h4>
+        <button class="btn btn-primary" id="startSpeechToText">
+          Start Listening
+        </button>
+        <p id="transcript"></p>
+        <button
+          class="btn btn-secondary"
+          onclick="closePopup('speechToTextPopup')"
+        >
+          Close
+        </button>
+      </div>
+
+      <div class="popup" id="textToSpeechPopup">
+        <h4>Text to Speech</h4>
+        <textarea
+          id="textToSpeechInput"
+          rows="3"
+          placeholder="Type text here..."
+        ></textarea
+        ><br />
+        <button class="btn btn-primary" id="playTextToSpeech">
+          Speak Text
+        </button>
+        <button
+          class="btn btn-secondary"
+          onclick="closePopup('textToSpeechPopup')"
+        >
+          Close
+        </button>
+      </div>
+
+      <div class="popup" id="imagePredictionPopup">
+        <h4>Image Prediction</h4>
+        <input type="file" id="imageUpload" accept="image/*" />
+        <img id="imagePreview" alt="Image preview" />
+        <button
+          class="btn btn-secondary"
+          onclick="closePopup('imagePredictionPopup')"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const openPopup = (popupId) => {
+        closeAllPopups();
+        document.getElementById(popupId).classList.add("active");
+        if (popupId === "quizPopup") {
+          loadQuizQuestions();
+        }
+      };
+
+      const closePopup = (popupId) => {
+        document.getElementById(popupId).classList.remove("active");
+      };
+
+      const closeAllPopups = () => {
+        document.querySelectorAll(".popup").forEach((popup) => {
+          popup.classList.remove("active");
+        });
+      };
+
+      document.getElementById("supportIcon").onclick = () =>
+        openPopup("supportPopup");
+      document.getElementById("quizIcon").onclick = () =>
+        openPopup("quizPopup");
+      document.getElementById("speechToTextIcon").onclick = () =>
+        openPopup("speechToTextPopup");
+      document.getElementById("textToSpeechIcon").onclick = () =>
+        openPopup("textToSpeechPopup");
+      document.getElementById("imagePredictionIcon").onclick = () =>
+        openPopup("imagePredictionPopup");
+
+      const quizQuestions = [
+        {
+          question:
+            "Which of the following is the correct order of precedence in C programming?",
+          options: ["* / + -", "+ - * /", "* + / -", "* / - +"],
+          answer: "* / + -",
+        },
+        {
+          question: "Which of the following algorithms is NOT stable?",
+          options: [
+            "Merge Sort",
+            "Insertion Sort",
+            "Quick Sort",
+            "Bubble Sort",
+          ],
+          answer: "Quick Sort",
+        },
+        {
+          question:
+            "In a Binary Search Tree, which traversal method gives the nodes in non-decreasing order?",
+          options: ["Preorder", "Inorder", "Postorder", "Level-order"],
+          answer: "Inorder",
+        },
+        {
+          question:
+            "In relational databases, what is the term for eliminating redundant data by separating data into related tables?",
+          options: [
+            "Denormalization",
+            "Normalization",
+            "Foreign Keying",
+            "Functional Dependency",
+          ],
+          answer: "Normalization",
+        },
+        {
+          question:
+            "Which of the following data structures provides amortized O(1) time complexity for insertion and deletion?",
+          options: ["Stack", "Queue", "Hash Map", "Binary Search Tree"],
+          answer: "Hash Map",
+        },
+        {
+          question: "Which of the following is true about Prim’s Algorithm?",
+          options: [
+            "It is used for finding the shortest path in a graph.",
+            "It finds a Minimum Spanning Tree.",
+            "It works only on weighted graphs.",
+            "Both b and c.",
+          ],
+          answer: "Both b and c.",
+        },
+      ];
+
+      const loadQuizQuestions = () => {
+        const quizContainer = document.getElementById("quizQuestions");
+        quizContainer.innerHTML = ""; // Clear previous questions
+        quizQuestions.forEach((q, index) => {
+          const questionHTML = `
+            <div class="mb-3">
+              <h6>${index + 1}. ${q.question}</h6>
+              ${q.options
+                .map(
+                  (option) => `
+                <div>
+                  <input type="radio" name="question${index}" value="${option}" required />
+                  ${option}
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          `;
+          quizContainer.insertAdjacentHTML("beforeend", questionHTML);
+        });
+      };
+
+      document.getElementById("quizForm").onsubmit = (event) => {
+        event.preventDefault();
+        let score = 0;
+        quizQuestions.forEach((q, index) => {
+          const selectedOption = document.querySelector(
+            `input[name="question${index}"]:checked`
+          );
+          if (selectedOption && selectedOption.value === q.answer) {
+            score++;
+          }
+        });
+        const resultMessage = `You scored ${score} out of ${quizQuestions.length}.`;
+        document.getElementById("quizResult").innerText = resultMessage;
+      };
+
+      // Speech to Text functionality
+      const recognition = new (window.SpeechRecognition ||
+        window.webkitSpeechRecognition)();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+
+      document.getElementById("startSpeechToText").onclick = () => {
+        recognition.start();
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          document.getElementById(
+            "transcript"
+          ).innerText = `You said: ${transcript}`;
+        };
+        recognition.onerror = (event) => {
+          alert("Error occurred: " + event.error);
+        };
+      };
+
+      // Text to Speech functionality
+      document.getElementById("playTextToSpeech").onclick = () => {
+        const text = document.getElementById("textToSpeechInput").value;
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = "en-US";
+        window.speechSynthesis.speak(speech);
+      };
+
+      document.getElementById("imageUpload").onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            document.getElementById("imagePreview").src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    </script>
+  </body>
+</html>
